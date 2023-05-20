@@ -92,55 +92,66 @@ let getAllCars = async (req, res) => {
     })
 }
 
-let genMembers = async (req, res) => {
-    let dateOfBirth = '2023-5-13';
-    let name = 'VoNhuCong';
-    let identification = 187777709;
-    let apartmentId = 0;
-    for (let i = 0; i < 1000; i++) {
-        await pool.execute('insert into members(date_of_birth, name, identification, apartment_id) values (?, ?, ?, ?)',
-            [dateOfBirth, name + i, identification, apartmentId]);
-        apartmentId++;
-        identification++;
+let genData = async (req, res) => {
+
+    // define data for members table
+    let member_id = 0;
+    let name = 'vonhucong';
+    let sex = 'nam';
+    let date_of_birth = '1999-8-11';
+    let indentitycard = 187777709;
+
+    // define data for phone_numbers table
+    let phone_number = '0962941';
+
+    // define data for cars table
+    let car_id = 0;
+    let car_type = 'xe máy';
+    let car_number = 'xxx';
+
+    // define data for apartments
+    let apartment_id = 0;
+    let floot = 0;
+    let area = 0;
+
+
+
+
+    for (let i = 0; i < 500; i++) {
+        // insert to members table
+        await pool.execute('insert into members(member_id, name, sex, date_of_birth, indentitycard, car_id, apartment_id) values (?, ?, ?, ?, ?, ?, ?)',
+            [member_id, name, sex, date_of_birth, indentitycard, car_id, apartment_id]);
+
+        // insert to phone_numbers table
+        await pool.execute('insert into phone_numbers(member_id, phone_number) values (?, ?)',
+            [member_id, phone_number]);
+
+        // insert to cars table
+        await pool.execute('insert into cars(car_id, car_type, car_number) values (?, ?, ?)',
+            [car_id, car_type, car_number + i]);
+
+        // insert to apartments table
+        await pool.execute('insert into apartments(apartment_id, floot, area) values (?, ?, ?)',
+            [apartment_id, floot, area]);
+
+
+
+
+
+        car_id++;
+        apartment_id++;
+        floot++;
+        area++;
     }
+
+
+
+
 
     return res.status(200).json({
         message: 'ok'
     })
 }
-
-
-let genPacking = async (req, res) => {
-    // member_id            int
-    // car_id               int
-    // packing_money        int
-    // packing_first_date   date
-    await pool.execute('insert into packing(member_id, car_id, packing_money, parking_first_date) values (?, ?, ?, ?)',
-        [dateOfBirth, name + i, identification, apartmentId]);
-}
-
-let genRelationship = async (req, res) => {
-    // member_id            int
-    // family_id            int
-    // relationship         string
-
-    await pool.execute('insert into packing(member_id, car_id, packing_money, parking_first_date) values (?, ?, ?, ?)',
-        [dateOfBirth, name + i, identification, apartmentId]);
-}
-
-let genApartment = async (req, res) => {
-    // apartment_id         int
-    // apartment_owner      string  
-    // apartment_type       string
-    // num_of_members       int
-    // purchage_date        date
-
-    await pool.execute('insert into packing(member_id, car_id, packing_money, parking_first_date) values (?, ?, ?, ?)',
-        [dateOfBirth, name + i, identification, apartmentId]);
-}
-
-
-
 module.exports = {
     // user
     getAllUsers, createNewUser, updateUser, deleteUser,
@@ -149,5 +160,5 @@ module.exports = {
     getAllMembers, getAllFamily, getAllApartments, getAllCars,
 
     // gen data for database
-    genMembers, genPacking, genRelationship, genApartment
+    genData
 }
