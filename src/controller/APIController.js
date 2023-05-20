@@ -1,9 +1,6 @@
 import pool from '../configs/connectDB';
 
 let getAllUsers = async (req, res) => {
-    //http
-    // 404 501
-    // json/xml => object
     const [rows, fields] = await pool.execute('SELECT * FROM users');
 
     return res.status(200).json({
@@ -60,10 +57,97 @@ let deleteUser = async (req, res) => {
 }
 
 let getAllMembers = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM users');
 
+    return res.status(200).json({
+        message: 'ok',
+        data: rows
+    });
 }
 
+let getAllApartments = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM users');
+
+    return res.status(200).json({
+        message: 'ok',
+        data: rows
+    })
+}
+
+let getAllFamily = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM users');
+
+    return res.status(200).json({
+        message: 'ok',
+        data: rows
+    })
+}
+
+let getAllCars = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM users');
+
+    return res.status(200).json({
+        message: 'ok',
+        data: rows
+    })
+}
+
+let genMembers = async (req, res) => {
+    let dateOfBirth = '2023-5-13';
+    let name = 'VoNhuCong';
+    let identification = 187777709;
+    let apartmentId = 0;
+    for (let i = 0; i < 1000; i++) {
+        await pool.execute('insert into members(date_of_birth, name, identification, apartment_id) values (?, ?, ?, ?)',
+            [dateOfBirth, name + i, identification, apartmentId]);
+        apartmentId++;
+        identification++;
+    }
+
+    return res.status(200).json({
+        message: 'ok'
+    })
+}
+
+
+let genPacking = async (req, res) => {
+    // member_id            int
+    // car_id               int
+    // packing_money        int
+    // packing_first_date   date
+    await pool.execute('insert into packing(member_id, car_id, packing_money, parking_first_date) values (?, ?, ?, ?)',
+        [dateOfBirth, name + i, identification, apartmentId]);
+}
+
+let genRelationship = async (req, res) => {
+    // member_id            int
+    // family_id            int
+    // relationship         string
+
+    await pool.execute('insert into packing(member_id, car_id, packing_money, parking_first_date) values (?, ?, ?, ?)',
+        [dateOfBirth, name + i, identification, apartmentId]);
+}
+
+let genApartment = async (req, res) => {
+    // apartment_id         int
+    // apartment_owner      string  
+    // apartment_type       string
+    // num_of_members       int
+    // purchage_date        date
+
+    await pool.execute('insert into packing(member_id, car_id, packing_money, parking_first_date) values (?, ?, ?, ?)',
+        [dateOfBirth, name + i, identification, apartmentId]);
+}
+
+
+
 module.exports = {
+    // user
     getAllUsers, createNewUser, updateUser, deleteUser,
-    getAllMembers, getAllFamily, getAllApartments, getAllCars
+
+    // member of apartment
+    getAllMembers, getAllFamily, getAllApartments, getAllCars,
+
+    // gen data for database
+    genMembers, genPacking, genRelationship, genApartment
 }

@@ -14,6 +14,8 @@ const initAPIRoute = (app) => {
     router.get('/apartments', APIController.getAllApartments);
     router.get('/cars', APIController.getAllCars);
 
+    router.post('/genMembers', APIController.genMembers);
+
     return app.use('/api/v1/', router)
 }
 
