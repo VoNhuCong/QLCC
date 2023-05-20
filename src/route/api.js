@@ -9,11 +9,13 @@ const initAPIRoute = (app) => {
     router.put('/update-user', APIController.updateUser); //method PUT -> UPDATE data
     router.delete('/delete-user/:id', APIController.deleteUser); //method DELETE -> DELETE data
 
+    router.get('/phone-number/:id', APIController.getPhoneNumber)
     router.get('/members', APIController.getAllMembers);
     router.get('/family', APIController.getAllFamily);
     router.get('/apartments', APIController.getAllApartments);
     router.get('/cars', APIController.getAllCars);
 
+    // genarate and delete all data in database
     router.post('/genData', APIController.genData);
     router.post('/delAllData', APIController.delAllData);
 

@@ -57,7 +57,7 @@ let deleteUser = async (req, res) => {
 }
 
 let getAllMembers = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM users');
+    const [rows, fields] = await pool.execute('SELECT * FROM members');
 
     return res.status(200).json({
         message: 'ok',
@@ -85,6 +85,22 @@ let getAllFamily = async (req, res) => {
 
 let getAllCars = async (req, res) => {
     const [rows, fields] = await pool.execute('SELECT * FROM users');
+
+    return res.status(200).json({
+        message: 'ok',
+        data: rows
+    })
+}
+
+let getPhoneNumber = async (req, res) => {
+    let member_id = req.params.id;
+    if (!member_id) {
+        return res.status(200).json({
+            message: 'missing member_id'
+        })
+    }
+
+    const [rows, fields] = await pool.execute('SELECT * FROM phone_numbers WHERE member_id = ?', [member_id]);
 
     return res.status(200).json({
         message: 'ok',
@@ -167,7 +183,7 @@ module.exports = {
     getAllUsers, createNewUser, updateUser, deleteUser,
 
     // member of apartment
-    getAllMembers, getAllFamily, getAllApartments, getAllCars,
+    getAllMembers, getAllFamily, getAllApartments, getAllCars, getPhoneNumber,
 
     // gen data for database
     genData, delAllData
