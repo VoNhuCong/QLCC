@@ -99,7 +99,7 @@ let genData = async (req, res) => {
     let name = 'vonhucong';
     let sex = 'nam';
     let date_of_birth = '1999-8-11';
-    let indentitycard = 187777709;
+    let identitycard = 187777709;
 
     // define data for phone_numbers table
     let phone_number = '0962941';
@@ -114,17 +114,18 @@ let genData = async (req, res) => {
     let floot = 0;
     let area = 0;
 
-
-
+    // define data for familys
+    let family_id = 0;
 
     for (let i = 0; i < 500; i++) {
+        member_id = i;
         // insert to members table
-        await pool.execute('insert into members(member_id, name, sex, date_of_birth, indentitycard, car_id, apartment_id) values (?, ?, ?, ?, ?, ?, ?)',
-            [member_id, name, sex, date_of_birth, indentitycard, car_id, apartment_id]);
+        await pool.execute('insert into members(member_id, name, sex, date_of_birth, identitycard, car_id, apartment_id) values (?, ?, ?, ?, ?, ?, ?)',
+            [member_id, name, sex, date_of_birth, identitycard, car_id, apartment_id]);
 
         // insert to phone_numbers table
         await pool.execute('insert into phone_numbers(member_id, phone_number) values (?, ?)',
-            [member_id, phone_number]);
+            [member_id, phone_number + i]);
 
         // insert to cars table
         await pool.execute('insert into cars(car_id, car_type, car_number) values (?, ?, ?)',
@@ -134,22 +135,31 @@ let genData = async (req, res) => {
         await pool.execute('insert into apartments(apartment_id, floot, area) values (?, ?, ?)',
             [apartment_id, floot, area]);
 
+        // insert to familys table
+        await pool.execute('insert into familys(family_id) values (?)',
+            [family_id]);
 
-
-
-
+        family_id++;
         car_id++;
         apartment_id++;
         floot++;
         area++;
     }
-
-
-
-
-
     return res.status(200).json({
         message: 'ok'
+    })
+}
+
+let delAllData = async (req, res) => {
+    await pool.execute('truncate apartments');
+    await pool.execute('truncate cars');
+    await pool.execute('truncate familys');
+    await pool.execute('truncate members');
+    await pool.execute('truncate owns');
+    await pool.execute('truncate phone_numbers');
+
+    return res.status(200).json({
+        message: 'delete ok'
     })
 }
 module.exports = {
@@ -160,5 +170,5 @@ module.exports = {
     getAllMembers, getAllFamily, getAllApartments, getAllCars,
 
     // gen data for database
-    genData
+    genData, delAllData
 }
