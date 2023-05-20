@@ -19,7 +19,7 @@ let initDB = async (req, res) => {
         apartment_id int PRIMARY KEY,
         floot int,
         area int, 
-        member_id int,
+        owner_id int,
         time_start date,
         status varchar(100)
     );
@@ -57,7 +57,7 @@ let genData = async (req, res) => {
     // define data for members table
     let member_id = 0;
     let name = 'vonhucong';
-    let sex = 'nam';
+    let sex = 1;
     let date_of_birth = '1999-8-11';
     let identitycard = 187777709;
 
@@ -132,6 +132,10 @@ let dropAllTable = async (req, res) => {
     await pool.execute('drop familys');
     await pool.execute('drop members');
     await pool.execute('drop phone_numbers');
+
+    return res.status(200).json({
+        message: 'delete ok'
+    })
 }
 
 module.exports = {
