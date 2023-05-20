@@ -66,7 +66,7 @@ let getAllMembers = async (req, res) => {
 }
 
 let getAllApartments = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM users');
+    const [rows, fields] = await pool.execute('SELECT * FROM apartments');
 
     return res.status(200).json({
         message: 'ok',
@@ -75,7 +75,7 @@ let getAllApartments = async (req, res) => {
 }
 
 let getAllFamily = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM users');
+    const [rows, fields] = await pool.execute('SELECT * FROM familys');
 
     return res.status(200).json({
         message: 'ok',
@@ -84,7 +84,7 @@ let getAllFamily = async (req, res) => {
 }
 
 let getAllCars = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM users');
+    const [rows, fields] = await pool.execute('SELECT * FROM cars');
 
     return res.status(200).json({
         message: 'ok',
@@ -108,83 +108,18 @@ let getPhoneNumber = async (req, res) => {
     })
 }
 
-let genData = async (req, res) => {
-
-    // define data for members table
-    let member_id = 0;
-    let name = 'vonhucong';
-    let sex = 'nam';
-    let date_of_birth = '1999-8-11';
-    let identitycard = 187777709;
-
-    // define data for phone_numbers table
-    let phone_number = '0962941';
-
-    // define data for cars table
-    let car_id = 0;
-    let car_type = 'xe máy';
-    let car_number = 'xxx';
-
-    // define data for apartments
-    let apartment_id = 0;
-    let floot = 0;
-    let area = 0;
-
-    // define data for familys
-    let family_id = 0;
-
-    for (let i = 0; i < 500; i++) {
-        member_id = i;
-        // insert to members table
-        await pool.execute('insert into members(member_id, name, sex, date_of_birth, identitycard, car_id, apartment_id) values (?, ?, ?, ?, ?, ?, ?)',
-            [member_id, name, sex, date_of_birth, identitycard, car_id, apartment_id]);
-
-        // insert to phone_numbers table
-        await pool.execute('insert into phone_numbers(member_id, phone_number) values (?, ?)',
-            [member_id, phone_number + i]);
-
-        // insert to cars table
-        await pool.execute('insert into cars(car_id, car_type, car_number) values (?, ?, ?)',
-            [car_id, car_type, car_number + i]);
-
-        // insert to apartments table
-        await pool.execute('insert into apartments(apartment_id, floot, area) values (?, ?, ?)',
-            [apartment_id, floot, area]);
-
-        // insert to familys table
-        await pool.execute('insert into familys(family_id) values (?)',
-            [family_id]);
-
-        family_id++;
-        car_id++;
-        apartment_id++;
-        floot++;
-        area++;
-    }
-    return res.status(200).json({
-        message: 'ok'
-    })
-}
-
-let delAllData = async (req, res) => {
-    await pool.execute('truncate apartments');
-    await pool.execute('truncate cars');
-    await pool.execute('truncate familys');
-    await pool.execute('truncate members');
-    await pool.execute('truncate owns');
-    await pool.execute('truncate phone_numbers');
-
-    return res.status(200).json({
-        message: 'delete ok'
-    })
-}
 module.exports = {
     // user
     getAllUsers, createNewUser, updateUser, deleteUser,
 
-    // member of apartment
-    getAllMembers, getAllFamily, getAllApartments, getAllCars, getPhoneNumber,
+    // members
+    getAllMembers,
+    //getMember,
 
-    // gen data for database
-    genData, delAllData
+
+    // familys
+    getAllFamily,
+    //getFamily,
+
+    getAllApartments, getAllCars, getPhoneNumber,
 }
