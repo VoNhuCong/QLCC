@@ -1,5 +1,5 @@
-CREATE TABLE members (
-        member_id int PRIMARY KEY,
+membersCREATE TABLE members (
+        member_id int PRIMARY KEY  AUTO_INCREMENT,
         name varchar(45),
         sex bit,
         date_of_birth date,
@@ -12,7 +12,7 @@ CREATE TABLE members (
         apartment_id int PRIMARY KEY,
         floot int,
         area int, 
-        owner_id int,
+        owner_id int NOT NULL,
         time_start date,
         status varchar(100)
     );
@@ -22,7 +22,7 @@ CREATE TABLE members (
         car_type varchar(45),
         car_number varchar(45),
         status varchar(45),
-        member_id int
+        member_id int NOT NULL
     );
     
     CREATE TABLE familys (
@@ -33,7 +33,7 @@ CREATE TABLE members (
     
     CREATE TABLE phone_numbers (
         phone_number varchar(45),
-        member_id int
+        member_id int NOT NULL
     );
     
 ALTER TABLE QLCC.phone_numbers

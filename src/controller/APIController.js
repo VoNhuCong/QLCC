@@ -108,6 +108,25 @@ let getPhoneNumber = async (req, res) => {
     })
 }
 
+
+let createNewMember = async (req, res) => {
+    console.log('check create new member: ', req.body);
+    let { name, sex, date_of_birth, identitycard, apartment_id, family_id } = req.body;
+
+    if (!name || !sex || !date_of_birth || !identitycard || !apartment_id || !family_id) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+
+    await pool.execute('insert into members(name, sex, date_of_birth, identitycard, apartment_id, family_id) values (?, ?, ?, ?, ?, ?)',
+        [name, sex, date_of_birth, identitycard, apartment_id, family_id]);
+
+    return res.status(200).json({
+        message: 'ok'
+    })
+}
+
 module.exports = {
     // user
     getAllUsers, createNewUser, updateUser, deleteUser,
@@ -122,4 +141,6 @@ module.exports = {
     //getFamily,
 
     getAllApartments, getAllCars, getPhoneNumber,
+
+    createNewMember
 }
