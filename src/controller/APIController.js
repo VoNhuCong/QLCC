@@ -152,13 +152,32 @@ let deleteMember = async (req, res) => {
 
 // working for apartment
 let getApartment = async (req, res) => {
+    console.log('check param: ', req.body);
+    let { apartment_id } = req.body;
+    if (!apartment_id) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+    const [rows, fields] = await pool.execute('select * from apartments where apartment_id = ?', [apartment_id]);
 
     return res.status(200).json({
-        message: 'getApartment ok'
+        message: 'getApartment ok',
+        data: rows
     })
 }
 
 let createApartment = async (req, res) => {
+    console.log('check param: ', req.body);
+    let { apartment_id, floot, area } = req.body;
+    if (!apartment_id || !floot || !area) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+
+    await pool.execute('insert into apartments (apartment_id, floot, area) values (?, ?, ?)',
+        [apartment_id, floot, area]);
 
     return res.status(200).json({
         message: 'createApartment ok'
@@ -166,6 +185,19 @@ let createApartment = async (req, res) => {
 }
 
 let updateApartment = async (req, res) => {
+    console.log('check param: ', req.body);
+    let [apartment_id, floot, area, owner_id, time_start, status] = req.body;
+    if (!apartment_id || !floot || !area) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+    if (!owner_id) owner_id = 0;
+    if (!time_start) time_start = '1975-4-30';
+    if (!status) status = '';
+
+    await pool.execute('update apartments set floot= ?, area = ? , owner_id = ?, time_start = ? , status= ? where apartment_id = ?',
+        [floot, area, owner_id, time_start, status, apartment_id]);
 
     return res.status(200).json({
         message: 'updateApartment ok'
@@ -173,7 +205,13 @@ let updateApartment = async (req, res) => {
 }
 
 let deleteApartment = async (req, res) => {
-
+    let [apartment_id] = req.body;
+    if (!apartment_id) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+    await pool.execute('delete from apartments where apartment_id = ?', [apartment_id])
     return res.status(200).json({
         message: 'deleteApartment ok'
     })
