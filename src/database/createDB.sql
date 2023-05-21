@@ -1,7 +1,7 @@
 membersCREATE TABLE members (
         member_id int PRIMARY KEY  AUTO_INCREMENT,
         name varchar(45),
-        sex bit,
+        sex varchar(45),
         date_of_birth date,
         identitycard int,
         apartment_id int,
