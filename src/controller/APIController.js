@@ -1,98 +1,15 @@
 import pool from '../configs/connectDB';
 
-let getAllUsers = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM users');
-
-    return res.status(200).json({
-        message: 'ok',
-        data: rows
-    })
-}
-
-let createNewUser = async (req, res) => {
-    console.log('check create new user: ', req.params);
-    let { firstName, lastName, email, address } = req.body;
-
-    if (!firstName || !lastName || !email || !address) {
-        return res.status(200).json({
-            message: 'missing required params'
-        })
-    }
-
-    await pool.execute('insert into users(firstName, lastName, email, address) values (?, ?, ?, ?)',
-        [firstName, lastName, email, address]);
-
-    return res.status(200).json({
-        message: 'ok'
-    })
-}
-
-let updateUser = async (req, res) => {
-    let { firstName, lastName, email, address, id } = req.body;
-    if (!firstName || !lastName || !email || !address || !id) {
-        return res.status(200).json({
-            message: 'missing required params'
-        })
-    }
-
-    await pool.execute('update users set firstName= ?, lastName = ? , email = ? , address= ? where id = ?',
-        [firstName, lastName, email, address, id]);
-
-    return res.status(200).json({
-        message: 'ok'
-    })
-}
-
-let deleteUser = async (req, res) => {
-    let userId = req.params.id;
-    if (!userId) {
-        return res.status(200).json({
-            message: 'missing required params'
-        })
-    }
-    await pool.execute('delete from users where id = ?', [userId])
-    return res.status(200).json({
-        message: 'ok'
-    })
-}
-
+// working for member
 let getAllMembers = async (req, res) => {
     const [rows, fields] = await pool.execute('SELECT * FROM members');
 
     return res.status(200).json({
-        message: 'ok',
+        message: 'getAllMembers',
         data: rows
     });
 }
 
-let getAllApartments = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM apartments');
-
-    return res.status(200).json({
-        message: 'ok',
-        data: rows
-    })
-}
-
-let getAllFamily = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM familys');
-
-    return res.status(200).json({
-        message: 'ok',
-        data: rows
-    })
-}
-
-let getAllCars = async (req, res) => {
-    const [rows, fields] = await pool.execute('SELECT * FROM cars');
-
-    return res.status(200).json({
-        message: 'ok',
-        data: rows
-    })
-}
-
-// working for member
 let getMember = async (req, res) => {
     console.log("check param: ", req.body);
     let { member_id } = req.body;
@@ -151,6 +68,14 @@ let deleteMember = async (req, res) => {
 }
 
 // working for apartment
+let getAllApartments = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM apartments');
+
+    return res.status(200).json({
+        message: 'ok',
+        data: rows
+    })
+}
 let getApartment = async (req, res) => {
     console.log('check param: ', req.body);
     let { apartment_id } = req.body;
@@ -218,6 +143,13 @@ let deleteApartment = async (req, res) => {
 }
 
 // working for family
+let getAllFamilys = async (req, res) => {
+    const [rows, fields] = await pool.execute('select * from familys');
+    return res.status(200).json({
+        message: 'getAllFamilys',
+        data: rows
+    })
+}
 let getFamily = async (req, res) => {
 
     return res.status(200).json({
@@ -247,14 +179,42 @@ let deleteFamily = async (req, res) => {
 }
 
 // working for car
-let getCar = async (req, res) => {
+let getAllCars = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM cars');
 
     return res.status(200).json({
-        message: 'getCar ok'
+        message: 'getAllcars',
+        data: rows
+    })
+}
+
+let getCar = async (req, res) => {
+    let { car_id } = req.body;
+    if (!car_id) {
+        res.status(200).json({
+            message: 'thiếu thông tin car_id'
+        })
+    }
+
+    const [rows, fields] = await pool.execute('select * from cars where car_id = ?', [car_id]);
+
+    return res.status(200).json({
+        message: 'getCar ok',
+        data: rows
     })
 }
 
 let createCar = async (req, res) => {
+
+    let { car_type, car_number, member_id } = req.body;
+    if (!car_type || !car_number || !member_id) {
+        res.status(200).json({
+            message: 'thiếu thông tin'
+        })
+    }
+
+    const [row, fields] = await pool.execute('insert into cars (car_type, car_number, member_id) values (?, ?, ?)',
+        [car_type, car_number, member_id]);
 
     return res.status(200).json({
         message: 'createCar ok'
@@ -276,6 +236,14 @@ let deleteCar = async (req, res) => {
 }
 
 // working for phone-number
+let getAllPhoneNumber = async (req, res) => {
+    const [rows, fields] = await pool.execute('SELECT * FROM phone_numbers');
+
+    return res.status(200).json({
+        message: 'getAllPhone',
+        data: rows
+    })
+}
 let getPhoneNumber = async (req, res) => {
 
     return res.status(200).json({
@@ -305,45 +273,36 @@ let deletePhoneNumber = async (req, res) => {
 }
 
 module.exports = {
-    // user
-    getAllUsers, createNewUser, updateUser, deleteUser,
-
-    // members
-    getAllMembers,
-    //getMember,
-
-
-    // familys
-    getAllFamily,
-    //getFamily,
-
-    getAllApartments, getAllCars, getPhoneNumber,
-
     // member
+    getAllMembers,
     getMember,
     createMember,
     updateMember,
     deleteMember,
 
     // car
+    getAllCars,
     getCar,
     createCar,
     updateCar,
     deleteCar,
 
     // apartment
+    getAllApartments,
     getApartment,
     createApartment,
     updateApartment,
     deleteApartment,
 
     // phone-number
+    getAllPhoneNumber,
     getPhoneNumber,
     createPhoneNumber,
     updatePhoneNumber,
     deletePhoneNumber,
 
     // family
+    getAllFamilys,
     getFamily,
     createFamily,
     updateFamily,
